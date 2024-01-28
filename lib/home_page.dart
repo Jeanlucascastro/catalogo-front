@@ -8,11 +8,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  final _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Text('Melhor equipe'),
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+      children: <Widget>[
+        Container(
+          color: Colors.yellow,
+          child: const Text('Melhor Equipe'),
+        ),
+        Container(
+          color: Colors.black,
+          child: const Text('Best Crew'),
+        )
+      ],
+      ),
     );
   }
 }
