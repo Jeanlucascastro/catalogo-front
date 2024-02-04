@@ -1,4 +1,5 @@
 import 'package:catalogo_front/home_page.dart';
+import 'package:catalogo_front/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,13 +12,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: "Talos",
       theme: ThemeData(
-       
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.brown,
+        primaryColor: const Color.fromRGBO(179, 162, 133, 0.5),
+        useMaterial3: false,
       ),
-      home: HomePage(),
+      debugShowCheckedModeBanner: false,
+      home: LoginScreen(),
     );
   }
 }
