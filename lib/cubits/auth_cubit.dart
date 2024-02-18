@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:catalogo_front/cubits/auth_states.dart';
+import 'package:catalogo_front/services/auth_service.dart';
 
 class AuthCubit extends Cubit<AuthState> {
 
@@ -9,20 +10,30 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit(): super(InitialAuthState());
 
-  Future<void> addToken({required String token}) async {
+  Future<void> addToken({required String email, required String pass}) async {
     emit(LoadingAuthState());
+
+      String maybeToken = "";
+
+      AuthService.login(login: email, password: pass).then((String value) {
+        maybeToken = value;
+    });
 
     await Future.delayed(const Duration(seconds: 1));
 
-    if (_token.contains(token)) {
+
+
+    if (maybeToken != "false") {
       emit(ErrorAuthState("Usuario anterior ainda logado"));
     } else {
-      _token = token;
+      _token = maybeToken;
       emit(LoadedAuthState(_token));
     }
   }
 
-  removeToken() {
+  Future<void> removeToken() async {
+    emit(LoadingAuthState());
+    await Future.delayed(const Duration(seconds: 1));
     _token = "";
     emit(InitialAuthState());
   }

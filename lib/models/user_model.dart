@@ -23,11 +23,11 @@ class UserModel extends Model {
     isLoading = true;
     notifyListeners();
 
-    AuthService.login(login: email, password: pass).then((bool value) {
-      print("Bool $value");
-      isLoading = false;
-      notifyListeners();
-    });
+    // AuthService.login(login: email, password: pass).then((bool value) {
+    //   print("Bool $value");
+    //   isLoading = false;
+    //   notifyListeners();
+    // });
   }
 
   void recoverPass() {

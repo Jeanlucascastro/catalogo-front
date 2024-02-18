@@ -1,26 +1,25 @@
 import 'package:catalogo_front/cubits/auth_cubit.dart';
-import 'package:catalogo_front/models/user_model.dart';
+import 'package:catalogo_front/cubits/auth_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scoped_model/scoped_model.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _AuthScreenState extends State<AuthScreen> {
 
   late final AuthCubit cubit;
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
 
   @override
@@ -38,7 +37,9 @@ class _LoginScreenState extends State<LoginScreen> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              
+            },
             child: const Text("Criar Conta",
               style: TextStyle(
                   fontSize: 15.0,
@@ -48,17 +49,23 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
-      body: ScopedModelDescendant<UserModel>(
-          builder: (context, child, model) {
-            if (model.isLoading) {
-              return const Center(child: CircularProgressIndicator(),);
-            } else {
-              return Form(
-                key: _formKey,
-                child: ListView(
-                  padding: const EdgeInsets.all(16.0),
-                  children: <Widget>[
-                    TextFormField(
+      body: Stack(
+        children: [
+          BlocBuilder(
+            bloc: cubit,
+            builder: (context, state) {
+              if (state is LoadedAuthState) {
+                return const Center(child: Text("Logado"));
+              } else if (state is LoadingAuthState) {
+                return const Center(child: CircularProgressIndicator(),);
+              } else if (state is InitialAuthState) {
+                // return Center(child: Text(state.token));
+                return Form(
+                  key: _formKey,
+                  child: ListView(
+                    padding: const EdgeInsets.all(16.0),
+                    children: <Widget>[
+                       TextFormField(
                       controller: _emailController,
                       decoration: const InputDecoration(
                         hintText: "Usuario",
@@ -74,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: _passController,
                       decoration: const InputDecoration(
-                        hintText: "Senha",
+                        hintText: "Senha"
                       ),
                       obscureText: true,
                       validator: (text) {
@@ -87,9 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {},
-                        child: const Text("Esqueci minha senha",
-                          textAlign: TextAlign.right,
-                        ),
+                        child: const Text("Esqueci minha senha", textAlign: TextAlign.right,),
                       ),
                     ),
                     const SizedBox(height: 16.0),
@@ -98,33 +103,31 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            print("Button");
-                            model.singIn(
-                                email: _emailController.text,
-                                pass: _passController.text,
-                                onSuccess: _onSuccess,
-                                onFail: _onFail
-                            );
+                            cubit.addToken(
+                              email: _emailController.text,
+                              pass: _passController.text
+                              );
                           }
                         },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.brown), // Define a cor de fundo do botão
-                        ),
                         child: const Text("Entrar",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.white
-                          ),
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.white
+                        ),
                         ),
                       ),
                     )
-                  ],
-                ),
-              );
-            }
+                    ],
 
-          }
-      ),
+                  ),
+                  );
+              } else {
+                return Center(child: Text(cubit.token));
+              }
+            },
+          )
+        ],
+      )
     );
   }
 

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  static Future<bool> login( {required String login, required String password}) async {
+  static Future<String> login( {required String login, required String password}) async {
     // URL da API de login
     String url = 'http://localhost:8080/auth/login';
 
@@ -24,25 +24,26 @@ class AuthService {
 
       // Verifica se a solicitação foi bem-sucedida (código de status 200)
       if (response.statusCode == 200) {
-        return true;
+        
         // Analisa a resposta JSON
         Map<String, dynamic> responseData = json.decode(response.body);
+        print("Success: $responseData");
+        print(responseData['token']);
 
         // Verifica se o login foi bem-sucedido na resposta
-        bool success = responseData['success'];
+        String success = responseData[''];
 
-        print("Success: $success");
-
+      
         return success; // Retorna o valor de sucesso
       } else {
         // Se a solicitação falhar com outro código de status, você pode lidar com isso aqui, como lançar uma exceção ou retornar false
         print("Erro de solicitação: ${response.statusCode}");
-        return false;
+        return "false";
       }
     } catch (e) {
       // Se ocorrer um erro durante a solicitação, você pode lidar com isso aqui, como lançar uma exceção ou retornar false
       print('Erro ao fazer login: $e');
-      return false;
+      return 'false';
     }
 
   }
