@@ -21,8 +21,6 @@ class AuthCubit extends Cubit<AuthState> {
 
     await Future.delayed(const Duration(seconds: 1));
 
-
-
     if (maybeToken != "false") {
       emit(ErrorAuthState("Usuario anterior ainda logado"));
     } else {

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
                   useMaterial3: false,
                 ),
                 debugShowCheckedModeBanner: false,
-                home: AuthScreen(),
+                home: const AuthScreen(),
               )
           );
         }
