@@ -1,5 +1,9 @@
-import 'package:catalogo_front/home_page.dart';
+import 'package:catalogo_front/cubits/auth_cubit.dart';
+import 'package:catalogo_front/models/user_model.dart';
+import 'package:catalogo_front/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,14 +14,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-       
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: HomePage(),
-    );
+          return BlocProvider(
+            create: (_) => AuthCubit() ,
+            child: MaterialApp(
+                title: "Talos",
+                theme: ThemeData(
+                  primarySwatch: Colors.brown,
+                  primaryColor: const Color.fromRGBO(179, 162, 133, 0.5),
+                  useMaterial3: false,
+                ),
+                debugShowCheckedModeBanner: false,
+                home: const AuthScreen(),
+              )
+          );
   }
 }
